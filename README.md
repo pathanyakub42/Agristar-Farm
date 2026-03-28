@@ -1,2 +1,0 @@
-# agristar
-For Education 
