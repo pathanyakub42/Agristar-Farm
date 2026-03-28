@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - Agristar Farm Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #CC0000; --red-dark: #8B0000; --red-light: #E53333;
+  --white: #fff; --bg: #F7F2F2; --dark: #1C0A0A; --gray: #666;
+  --border: #DDD0D0; --sidebar: #1a0505; --sidebar-w: 240px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Rajdhani',sans-serif; background:var(--bg); color:var(--dark); }
+
+/* LOGIN */
+#loginPage { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg,var(--red-dark),var(--red)); }
+.login-box { background:white; border-radius:20px; padding:48px 40px; width:100%; max-width:400px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.login-logo { text-align:center; margin-bottom:32px; }
+.login-logo .logo-circle { width:60px; height:60px; background:var(--red-dark); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-family:'Barlow Condensed',sans-serif; font-weight:900; margin:0 auto 12px; }
+.login-logo h2 { font-family:'Barlow Condensed',sans-serif; font-size:24px; font-weight:800; color:var(--dark); text-transform:uppercase; }
+.login-logo p { font-size:13px; color:var(--gray); font-weight:500; }
+.login-field { margin-bottom:18px; }
+.login-field label { display:block; font-size:14px; font-weight:700; margin-bottom:7px; }
+.login-field input { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:15px; outline:none; transition:border 0.2s; }
+.login-field input:focus { border-color:var(--red); }
+.btn-login { width:100%; background:var(--red-dark); color:white; border:none; padding:14px; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; cursor:pointer; transition:background 0.2s; text-transform:uppercase; }
+.btn-login:hover { background:var(--red); }
+.login-err { background:#fee; border:1px solid #f99; border-radius:8px; padding:10px 14px; font-size:14px; color:#c00; margin-top:14px; display:none; text-align:center; }
+
+/* LAYOUT */
+#adminApp { display:none; min-height:100vh; }
+.sidebar { position:fixed; left:0; top:0; bottom:0; width:var(--sidebar-w); background:var(--sidebar); z-index:100; display:flex; flex-direction:column; }
+.sidebar-logo { padding:20px 20px 16px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-logo .brand { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:white; letter-spacing:0.5px; line-height:1.2; }
+.sidebar-logo .sub { font-size:10px; color:rgba(255,255,255,0.45); letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
+.sidebar-nav { flex:1; padding:16px 12px; overflow-y:auto; }
+.nav-section { font-size:10px; font-weight:700; color:rgba(255,255,255,0.3); letter-spacing:2px; text-transform:uppercase; padding:8px 8px 6px; margin-top:12px; }
+.nav-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:8px; cursor:pointer; color:rgba(255,255,255,0.65); font-size:15px; font-weight:600; transition:all 0.2s; margin-bottom:2px; }
+.nav-item:hover { background:rgba(255,255,255,0.08); color:white; }
+.nav-item.active { background:var(--red); color:white; }
+.nav-item .icon { font-size:18px; width:22px; text-align:center; }
+.sidebar-footer { padding:16px; border-top:1px solid rgba(255,255,255,0.08); }
+.btn-logout { width:100%; background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.7); border:none; padding:10px; border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-logout:hover { background:rgba(204,0,0,0.4); color:white; }
+
+.main-content { margin-left:var(--sidebar-w); min-height:100vh; }
+.topbar { background:white; height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 28px; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50; }
+.topbar-title { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; color:var(--dark); text-transform:uppercase; }
+.topbar-badge { background:var(--red); color:white; font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; }
+
+.page { display:none; padding:28px; }
+.page.active { display:block; }
+
+/* STATS */
+.stats-row { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
+.stat-card { background:white; border-radius:12px; padding:20px; border:1px solid var(--border); }
+.stat-card .s-num { font-family:'Barlow Condensed',sans-serif; font-size:36px; font-weight:800; color:var(--red-dark); line-height:1; }
+.stat-card .s-label { font-size:13px; color:var(--gray); font-weight:600; margin-top:4px; }
+
+/* CARDS */
+.card { background:white; border-radius:14px; border:1px solid var(--border); overflow:hidden; margin-bottom:24px; }
+.card-header { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+.card-header h3 { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:800; color:var(--dark); text-transform:uppercase; }
+.card-body { padding:22px; }
+
+/* BUTTONS */
+.btn { display:inline-flex; align-items:center; gap:6px; padding:9px 18px; border-radius:8px; border:none; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; cursor:pointer; transition:all 0.2s; letter-spacing:0.5px; text-transform:uppercase; }
+.btn-red { background:var(--red-dark); color:white; }
+.btn-red:hover { background:var(--red); }
+.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--dark); }
+.btn-outline:hover { border-color:var(--red); color:var(--red); }
+.btn-danger { background:#fee; color:#c00; border:1px solid #f5c6c6; }
+.btn-danger:hover { background:#c00; color:white; }
+.btn-sm { padding:6px 12px; font-size:13px; }
+.btn-green { background:#2e7d32; color:white; }
+.btn-green:hover { background:#1b5e20; }
+
+/* FORM */
+.form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; margin-bottom:16px; }
+.fg { }
+.fg label { display:block; font-size:13px; font-weight:700; color:var(--dark); margin-bottom:6px; }
+.fg input, .fg select { width:100%; padding:10px 14px; border:1.5px solid var(--border); border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:14px; outline:none; transition:border 0.2s; background:#fdf8f8; }
+.fg input:focus, .fg select:focus { border-color:var(--red); background:white; }
+
+/* TABLE */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:14px; }
+th { background:#f7f0f0; color:var(--dark); font-weight:700; font-size:13px; letter-spacing:0.3px; padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); white-space:nowrap; }
+td { padding:10px 14px; border-bottom:1px solid #f0e8e8; vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#fdf5f5; }
+.badge { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+.badge-new { background:#e3f2fd; color:#1565c0; }
+.badge-read { background:#e8f5e9; color:#2e7d32; }
+.tractor-thumb { width:50px; height:40px; border-radius:6px; object-fit:cover; background:#f0e8e8; display:flex; align-items:center; justify-content:center; font-size:18px; }
+.tractor-thumb img { width:50px; height:40px; border-radius:6px; object-fit:cover; }
+
+/* INQUIRY DETAIL */
+.inquiry-detail { background:#f9f2f2; border-radius:10px; padding:16px; margin-top:8px; display:none; }
+.inq-row { display:flex; gap:8px; margin-bottom:6px; font-size:14px; }
+.inq-row strong { min-width:80px; color:var(--dark); font-weight:700; }
+
+/* TALUKA */
+.taluka-item { background:#f7f0f0; border-radius:10px; padding:14px 18px; margin-bottom:10px; }
+.taluka-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.taluka-name { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:var(--dark); }
+.villages-list { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+.village-chip { background:white; border:1px solid var(--border); border-radius:20px; padding:4px 12px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; }
+.village-chip button { background:none; border:none; color:#c00; cursor:pointer; font-size:14px; line-height:1; padding:0; }
+.add-village-row { display:flex; gap:8px; margin-top:10px; }
+.add-village-row input { flex:1; padding:8px 12px; border:1.5px solid var(--border); border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:14px; outline:none; }
+.add-village-row input:focus { border-color:var(--red); }
+
+.loading { text-align:center; padding:40px; color:var(--gray); font-size:16px; }
+.empty { text-align:center; padding:40px; color:var(--gray); font-size:15px; }
+.toast { position:fixed; bottom:24px; right:24px; background:var(--dark); color:white; padding:12px 20px; border-radius:10px; font-size:14px; font-weight:600; z-index:9999; opacity:0; transform:translateY(10px); transition:all 0.3s; pointer-events:none; }
+.toast.show { opacity:1; transform:none; }
+
+@media(max-width:768px) {
+  .sidebar { width:200px; }
+  .main-content { margin-left:200px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-circle">A</div>
+      <h2>Agristar Admin</h2>
+      <p>Farm Service Management Panel</p>
+    </div>
+    <div class="login-field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Username daalo" />
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Password daalo" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn-login" onclick="doLogin()">🔐 Login Karo</button>
+    <div class="login-err" id="loginErr">❌ Galat username ya password!</div>
+  </div>
+</div>
+
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand">AGRISTAR FARM SERVICE</div>
+      <div class="sub">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <div class="nav-item active" onclick="showPage('dashboard')"><span class="icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="showPage('inquiries')"><span class="icon">📋</span> Inquiries <span id="inquiryCountBadge" style="margin-left:auto;background:var(--red);color:white;font-size:11px;padding:2px 7px;border-radius:10px;display:none;"></span></div>
+      <div class="nav-section">Stock</div>
+      <div class="nav-item" onclick="showPage('tractors')"><span class="icon">🚜</span> Tractors</div>
+      <div class="nav-section">Location</div>
+      <div class="nav-item" onclick="showPage('locations')"><span class="icon">📍</span> Taluka & Village</div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()">🚪 Logout</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-badge" id="topbarBadge">Agristar Farm Service</div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card"><div class="s-num" id="st-tractors">-</div><div class="s-label">🚜 Total Tractors</div></div>
+        <div class="stat-card"><div class="s-num" id="st-inquiries">-</div><div class="s-label">📋 Total Inquiries</div></div>
+        <div class="stat-card"><div class="s-num" id="st-new">-</div><div class="s-label">🔔 New Inquiries</div></div>
+        <div class="stat-card"><div class="s-num" id="st-talukas">-</div><div class="s-label">📍 Talukas</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Recent Inquiries</h3><button class="btn btn-outline btn-sm" onclick="showPage('inquiries')">Sab Dekho →</button></div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table id="recentInqTable">
+              <thead><tr><th>Naam</th><th>Mobile</th><th>Model</th><th>Taluka</th><th>Status</th><th>Time</th></tr></thead>
+              <tbody id="recentInqBody"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INQUIRIES -->
+    <div class="page" id="page-inquiries">
+      <div class="card">
+        <div class="card-header">
+          <h3>Saari Inquiries</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select id="inqFilter" onchange="filterInquiries()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;">
+              <option value="">Sab Dikhao</option>
+              <option value="new">Sirf New</option>
+              <option value="read">Sirf Read</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="loadInquiries()">🔄 Refresh</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Naam</th><th>Mobile</th><th>Model</th><th>Taluka</th><th>Village</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody id="inqTableBody"><tr><td colspan="9" class="loading">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACTORS -->
+    <div class="page" id="page-tractors">
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-header"><h3>Naya Tractor Add Karo</h3></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="fg"><label>Model Name *</label><input type="text" id="t_model" placeholder="Jaise: MF 241" /></div>
+            <div class="fg"><label>HP (Horsepower) *</label><input type="number" id="t_hp" placeholder="Jaise: 42" /></div>
+            <div class="fg"><label>Price (Lakh mein) *</label><input type="text" id="t_price" placeholder="Jaise: 7.50" /></div>
+            <div class="fg"><label>Image URL (optional)</label><input type="url" id="t_img" placeholder="https://..." /></div>
+          </div>
+          <button class="btn btn-red" onclick="addTractor()">➕ Tractor Add Karo</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Stock Mein Tractors</h3><button class="btn btn-outline btn-sm" onclick="loadTractors()">🔄 Refresh</button></div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Photo</th><th>Model</th><th>HP</th><th>Price</th><th>Action</th></tr></thead>
+              <tbody id="tractorTableBody"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOCATIONS -->
+    <div class="page" id="page-locations">
+      <div class="card" style="margin-bottom:24px;">
+        <div class="card-header"><h3>Naya Taluka Add Karo</h3></div>
+        <div class="card-body">
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <input type="text" id="newTaluka" placeholder="Taluka ka naam" style="padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:'Rajdhani',sans-serif;font-size:14px;outline:none;flex:1;min-width:200px;" />
+            <button class="btn btn-red" onclick="addTaluka()">➕ Taluka Add Karo</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Taluka & Villages</h3><button class="btn btn-outline btn-sm" onclick="loadLocations()">🔄 Refresh</button></div>
+        <div class="card-body" id="locationsBody"><div class="loading">Loading...</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://yoqojrufwigyrflnzncd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Wm3dGa1Yg1TnlevZjxKmSw_0Dy4vmtf';
+const ADMIN_USER = 'agristar';
+const ADMIN_PASS = 'yakub@123';
+
+async function sb(path, opts={}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': opts.prefer||'' },
+    method: opts.method||'GET',
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  });
+  if (res.status===201 || res.headers.get('content-length')==='0') return true;
+  if (!res.ok) { const e = await res.text(); console.error(e); return null; }
+  return res.json();
+}
+
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  if (u===ADMIN_USER && p===ADMIN_PASS) {
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    loadDashboard();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+}
+
+function logout() {
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  const navMap = {dashboard:0, inquiries:1, tractors:3, locations:5};
+  document.querySelectorAll('.nav-item')[navMap[name]]?.classList.add('active');
+  const titles = {dashboard:'Dashboard', inquiries:'Inquiries', tractors:'Tractor Stock', locations:'Taluka & Village'};
+  document.getElementById('topbarTitle').textContent = titles[name]||name;
+  if (name==='dashboard') loadDashboard();
+  if (name==='inquiries') loadInquiries();
+  if (name==='tractors') loadTractors();
+  if (name==='locations') loadLocations();
+}
+
+let allInquiries = [];
+
+async function loadDashboard() {
+  const [tractors, inquiries, talukas] = await Promise.all([
+    sb('tractors?select=id'), sb('inquiries?select=*&order=created_at.desc&limit=50'), sb('talukas?select=id')
+  ]);
+  document.getElementById('st-tractors').textContent = tractors?.length||0;
+  document.getElementById('st-inquiries').textContent = inquiries?.length||0;
+  const newCount = inquiries?.filter(i=>i.status==='new').length||0;
+  document.getElementById('st-new').textContent = newCount;
+  document.getElementById('st-talukas').textContent = talukas?.length||0;
+  if (newCount>0) { document.getElementById('inquiryCountBadge').textContent=newCount; document.getElementById('inquiryCountBadge').style.display='inline'; }
+  // Recent 5
+  const recent = (inquiries||[]).slice(0,5);
+  document.getElementById('recentInqBody').innerHTML = recent.length ? recent.map(i=>`
+    <tr>
+      <td><strong>${i.naam}</strong></td>
+      <td>${i.mobile}</td>
+      <td><span class="badge badge-new">${i.model_name}</span></td>
+      <td>${i.taluka||'-'}</td>
+      <td><span class="badge ${i.status==='new'?'badge-new':'badge-read'}">${i.status==='new'?'🔔 New':'✅ Read'}</span></td>
+      <td>${timeAgo(i.created_at)}</td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" class="empty">Abhi koi inquiry nahi</td></tr>';
+}
+
+async function loadInquiries() {
+  document.getElementById('inqTableBody').innerHTML = '<tr><td colspan="9" class="loading">Loading...</td></tr>';
+  const data = await sb('inquiries?select=*&order=created_at.desc');
+  allInquiries = data||[];
+  renderInquiries(allInquiries);
+}
+
+function filterInquiries() {
+  const f = document.getElementById('inqFilter').value;
+  renderInquiries(f ? allInquiries.filter(i=>i.status===f) : allInquiries);
+}
+
+function renderInquiries(list) {
+  document.getElementById('inqTableBody').innerHTML = list.length ? list.map((i,idx)=>`
+    <tr>
+      <td>${idx+1}</td>
+      <td><strong>${i.naam}</strong></td>
+      <td><a href="tel:${i.mobile}" style="color:var(--red);font-weight:700;">${i.mobile}</a></td>
+      <td><span class="badge badge-new">${i.model_name}</span></td>
+      <td>${i.taluka||'-'}</td>
+      <td>${i.village||'-'}</td>
+      <td><span class="badge ${i.status==='new'?'badge-new':'badge-read'}">${i.status==='new'?'🔔 New':'✅ Read'}</span></td>
+      <td style="white-space:nowrap;font-size:12px;">${formatDate(i.created_at)}</td>
+      <td>
+        ${i.status==='new'?`<button class="btn btn-green btn-sm" onclick="markRead('${i.id}')">✅ Read</button>`:''}
+        <button class="btn btn-danger btn-sm" onclick="deleteInquiry('${i.id}')" style="margin-left:4px;">🗑️</button>
+      </td>
+    </tr>
+  `).join('') : '<tr><td colspan="9" class="empty">Koi inquiry nahi mili</td></tr>';
+}
+
+async function markRead(id) {
+  await sb(`inquiries?id=eq.${id}`, {method:'PATCH', prefer:'return=minimal', body:{status:'read'}});
+  showToast('✅ Inquiry read mark ho gayi!');
+  loadInquiries();
+}
+
+async function deleteInquiry(id) {
+  if (!confirm('Kya aap is inquiry ko delete karna chahte hain?')) return;
+  await sb(`inquiries?id=eq.${id}`, {method:'DELETE'});
+  showToast('🗑️ Inquiry delete ho gayi!');
+  loadInquiries();
+}
+
+async function loadTractors() {
+  document.getElementById('tractorTableBody').innerHTML = '<tr><td colspan="5" class="loading">Loading...</td></tr>';
+  const data = await sb('tractors?select=*&order=created_at.desc');
+  const tractors = data||[];
+  document.getElementById('tractorTableBody').innerHTML = tractors.length ? tractors.map(t=>`
+    <tr>
+      <td>
+        ${t.image_url
+          ? `<img src="${t.image_url}" style="width:50px;height:40px;border-radius:6px;object-fit:cover;" onerror="this.outerHTML='<div style=\\'width:50px;height:40px;border-radius:6px;background:#f0e8e8;display:flex;align-items:center;justify-content:center;font-size:22px;\\'>🚜</div>'">`
+          : '<div style="width:50px;height:40px;border-radius:6px;background:#f0e8e8;display:flex;align-items:center;justify-content:center;font-size:22px;">🚜</div>'
+        }
+      </td>
+      <td><strong>${t.model_name}</strong></td>
+      <td>${t.hp} HP</td>
+      <td>₹${t.price} Lakh</td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteTractor('${t.id}','${t.model_name}')">🗑️ Remove</button></td>
+    </tr>
+  `).join('') : '<tr><td colspan="5" class="empty">Koi tractor nahi hai. Upar se add karo!</td></tr>';
+}
+
+async function addTractor() {
+  const model = document.getElementById('t_model').value.trim();
+  const hp = document.getElementById('t_hp').value.trim();
+  const price = document.getElementById('t_price').value.trim();
+  const img = document.getElementById('t_img').value.trim();
+  if (!model || !hp || !price) { showToast('⚠️ Model, HP aur Price zaroori hai!'); return; }
+  const ok = await sb('tractors', {method:'POST', prefer:'return=minimal', body:{model_name:model, hp:parseInt(hp), price, image_url:img||null}});
+  if (ok) { showToast('✅ Tractor add ho gaya!'); document.getElementById('t_model').value=''; document.getElementById('t_hp').value=''; document.getElementById('t_price').value=''; document.getElementById('t_img').value=''; loadTractors(); }
+  else showToast('❌ Error aaya! Dobara try karo.');
+}
+
+async function deleteTractor(id, name) {
+  if (!confirm(`"${name}" ko stock se remove karna chahte ho?`)) return;
+  await sb(`tractors?id=eq.${id}`, {method:'DELETE'});
+  showToast(`🗑️ ${name} remove ho gaya!`);
+  loadTractors();
+}
+
+async function loadLocations() {
+  document.getElementById('locationsBody').innerHTML = '<div class="loading">Loading...</div>';
+  const data = await sb('talukas?select=*,villages(*)&order=name.asc');
+  const talukas = data||[];
+  if (!talukas.length) { document.getElementById('locationsBody').innerHTML = '<div class="empty">Koi taluka nahi. Upar se add karo!</div>'; return; }
+  document.getElementById('locationsBody').innerHTML = talukas.map(t=>`
+    <div class="taluka-item">
+      <div class="taluka-header">
+        <div class="taluka-name">📍 ${t.name}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteTaluka('${t.id}','${t.name}')">🗑️ Taluka Remove</button>
+      </div>
+      <div class="villages-list" id="vlist-${t.id}">
+        ${(t.villages||[]).map(v=>`
+          <div class="village-chip">${v.name} <button onclick="deleteVillage('${v.id}','${t.id}')">✕</button></div>
+        `).join('')}
+        ${!(t.villages||[]).length ? '<span style="font-size:13px;color:var(--gray);">Koi village nahi</span>' : ''}
+      </div>
+      <div class="add-village-row">
+        <input type="text" id="vInput-${t.id}" placeholder="Village ka naam daalo..." onkeydown="if(event.key==='Enter')addVillage('${t.id}')" />
+        <button class="btn btn-red btn-sm" onclick="addVillage('${t.id}')">+ Add Village</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function addTaluka() {
+  const name = document.getElementById('newTaluka').value.trim();
+  if (!name) return;
+  const ok = await sb('talukas', {method:'POST', prefer:'return=minimal', body:{name}});
+  if (ok) { showToast('✅ Taluka add ho gaya!'); document.getElementById('newTaluka').value=''; loadLocations(); }
+  else showToast('❌ Error! Shayad yeh taluka pehle se hai.');
+}
+
+async function deleteTaluka(id, name) {
+  if (!confirm(`"${name}" aur uske saare villages delete karna chahte ho?`)) return;
+  await sb(`villages?taluka_id=eq.${id}`, {method:'DELETE'});
+  await sb(`talukas?id=eq.${id}`, {method:'DELETE'});
+  showToast(`🗑️ ${name} delete ho gaya!`);
+  loadLocations();
+}
+
+async function addVillage(talukaId) {
+  const inp = document.getElementById(`vInput-${talukaId}`);
+  const name = inp.value.trim();
+  if (!name) return;
+  const ok = await sb('villages', {method:'POST', prefer:'return=minimal', body:{name, taluka_id:talukaId}});
+  if (ok) { showToast('✅ Village add ho gaya!'); inp.value=''; loadLocations(); }
+  else showToast('❌ Error! Dobara try karo.');
+}
+
+async function deleteVillage(id, talukaId) {
+  await sb(`villages?id=eq.${id}`, {method:'DELETE'});
+  showToast('🗑️ Village remove ho gaya!');
+  loadLocations();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+function timeAgo(dateStr) {
+  const diff = (Date.now() - new Date(dateStr)) / 1000;
+  if (diff<60) return 'Abhi';
+  if (diff<3600) return `${Math.floor(diff/60)}m pehle`;
+  if (diff<86400) return `${Math.floor(diff/3600)}h pehle`;
+  return `${Math.floor(diff/86400)}d pehle`;
+}
+
+function formatDate(dateStr) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+</script>
+</body>
+</html>

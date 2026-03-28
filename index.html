@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agristar Farm Service - Massey Ferguson Tractor Dealership</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #CC0000;
+  --red-dark: #8B0000;
+  --red-light: #E53333;
+  --white: #FFFFFF;
+  --off-white: #FDF8F8;
+  --cream: #F5EFEF;
+  --dark: #1C0A0A;
+  --gray: #666;
+  --border: #DDD0D0;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Rajdhani',sans-serif; background:var(--off-white); color:var(--dark); overflow-x:hidden; }
+
+nav { background:var(--red-dark); position:sticky; top:0; z-index:999; box-shadow:0 2px 20px rgba(0,0,0,0.3); }
+.nav-inner { max-width:1200px; margin:auto; display:flex; align-items:center; justify-content:space-between; padding:0 24px; height:68px; }
+.logo { display:flex; align-items:center; gap:12px; text-decoration:none; cursor:pointer; }
+.logo-circle { width:46px; height:46px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:900; color:var(--red-dark); font-family:'Barlow Condensed',sans-serif; flex-shrink:0; }
+.logo-title { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; color:white; letter-spacing:1px; display:block; }
+.logo-sub { font-size:10px; font-weight:500; color:rgba(255,255,255,0.7); letter-spacing:2px; display:block; }
+.nav-links { display:flex; gap:4px; list-style:none; }
+.nav-links a { color:rgba(255,255,255,0.85); text-decoration:none; font-size:15px; font-weight:600; padding:8px 14px; border-radius:6px; transition:all 0.2s; }
+.nav-links a:hover { background:rgba(255,255,255,0.15); color:white; }
+.nav-btn { background:white !important; color:var(--red-dark) !important; font-weight:700 !important; }
+.nav-btn:hover { background:var(--cream) !important; }
+.hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:4px; }
+.hamburger span { width:24px; height:2px; background:white; border-radius:2px; }
+
+#home { background:linear-gradient(135deg, var(--red-dark) 0%, var(--red) 55%, #FF3333 100%); min-height:500px; display:flex; align-items:center; position:relative; overflow:hidden; }
+#home::before { content:''; position:absolute; right:-100px; top:-100px; width:500px; height:500px; background:rgba(255,255,255,0.04); border-radius:50%; }
+.hero-inner { max-width:1200px; margin:auto; padding:70px 24px; position:relative; z-index:2; display:flex; align-items:center; gap:48px; flex-wrap:wrap; }
+.hero-text { flex:1; min-width:280px; }
+.hero-badge { display:inline-block; background:rgba(255,255,255,0.18); color:white; font-size:12px; font-weight:700; letter-spacing:2px; padding:6px 14px; border-radius:20px; margin-bottom:18px; text-transform:uppercase; border:1px solid rgba(255,255,255,0.3); }
+.hero-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(42px,6vw,72px); font-weight:900; color:white; line-height:0.95; margin-bottom:18px; text-transform:uppercase; }
+.hero-title span { color:rgba(255,255,255,0.45); display:block; font-size:0.55em; font-weight:600; letter-spacing:3px; margin-bottom:6px; }
+.hero-desc { color:rgba(255,255,255,0.82); font-size:17px; font-weight:500; line-height:1.6; margin-bottom:32px; max-width:480px; }
+.hero-actions { display:flex; gap:14px; flex-wrap:wrap; }
+.btn-primary { background:white; color:var(--red-dark); font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; padding:14px 32px; border-radius:8px; border:none; cursor:pointer; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+.btn-primary:hover { background:var(--cream); transform:translateY(-2px); }
+.btn-outline { background:transparent; color:white; font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; padding:13px 28px; border-radius:8px; border:2px solid rgba(255,255,255,0.5); cursor:pointer; letter-spacing:1px; text-transform:uppercase; transition:all 0.2s; }
+.btn-outline:hover { border-color:white; background:rgba(255,255,255,0.1); }
+.hero-stats { display:flex; gap:32px; flex-wrap:wrap; margin-top:40px; }
+.stat-num { font-family:'Barlow Condensed',sans-serif; font-size:36px; font-weight:900; color:white; line-height:1; }
+.stat-label { font-size:12px; color:rgba(255,255,255,0.6); letter-spacing:1px; font-weight:500; }
+.tractor-graphic { width:300px; height:200px; background:rgba(255,255,255,0.08); border-radius:20px; border:2px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:90px; }
+
+section { padding:72px 24px; }
+.section-inner { max-width:1200px; margin:auto; }
+.section-header { text-align:center; margin-bottom:48px; }
+.section-tag { display:inline-block; background:var(--red); color:white; font-size:11px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; text-transform:uppercase; margin-bottom:12px; }
+.section-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(32px,4vw,48px); font-weight:800; color:var(--dark); text-transform:uppercase; }
+.section-sub { font-size:16px; color:var(--gray); margin-top:10px; font-weight:500; }
+
+#tractors { background:var(--cream); }
+.tractors-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
+.tractor-card { background:white; border-radius:16px; overflow:hidden; box-shadow:0 2px 16px rgba(140,0,0,0.08); transition:all 0.3s; border:1px solid var(--border); }
+.tractor-card:hover { transform:translateY(-6px); box-shadow:0 12px 40px rgba(140,0,0,0.15); }
+.card-img-wrap { width:100%; height:210px; position:relative; background:linear-gradient(135deg,#f8eded,#ffe8e8); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.card-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.card-img-placeholder { font-size:72px; }
+.card-badge { position:absolute; top:12px; left:12px; background:var(--red); color:white; font-size:11px; font-weight:700; padding:4px 10px; border-radius:4px; }
+.card-body { padding:20px; }
+.card-model { font-family:'Barlow Condensed',sans-serif; font-size:26px; font-weight:800; color:var(--dark); }
+.card-hp { font-size:14px; color:var(--gray); font-weight:600; margin:4px 0 12px; }
+.card-hp span { color:var(--red); font-weight:700; }
+.card-price { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:800; color:var(--red-dark); margin-bottom:16px; }
+.card-price small { font-size:14px; font-weight:500; color:var(--gray); }
+.btn-inquire { width:100%; background:var(--red-dark); color:white; border:none; padding:12px; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; letter-spacing:1px; cursor:pointer; transition:all 0.2s; text-transform:uppercase; }
+.btn-inquire:hover { background:var(--red); }
+.no-tractors { text-align:center; padding:60px; color:var(--gray); font-size:18px; grid-column:1/-1; }
+
+#about { background:white; }
+.about-grid { display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; }
+.about-tag { display:inline-block; background:var(--red); color:white; font-size:11px; font-weight:700; letter-spacing:2px; padding:5px 14px; border-radius:20px; text-transform:uppercase; margin-bottom:16px; }
+.about-title { font-family:'Barlow Condensed',sans-serif; font-size:42px; font-weight:800; color:var(--dark); text-transform:uppercase; line-height:1.1; margin-bottom:20px; }
+.about-desc { font-size:16px; color:var(--gray); line-height:1.8; margin-bottom:28px; font-weight:500; }
+.about-points { list-style:none; display:flex; flex-direction:column; gap:14px; }
+.about-points li { display:flex; align-items:flex-start; gap:12px; font-size:16px; font-weight:600; }
+.about-points li::before { content:'✓'; background:var(--red); color:white; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; margin-top:1px; }
+.about-right { background:linear-gradient(135deg,var(--red-dark),var(--red)); border-radius:20px; padding:44px; color:white; }
+.about-right h3 { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:800; margin-bottom:24px; text-transform:uppercase; }
+.about-feature { display:flex; align-items:center; gap:14px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.15); }
+.about-feature:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.feature-icon { width:46px; height:46px; background:rgba(255,255,255,0.15); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0; }
+.feature-text h4 { font-size:16px; font-weight:700; }
+.feature-text p { font-size:13px; opacity:0.75; font-weight:500; }
+
+#inquiry { background:var(--cream); }
+.inquiry-wrapper { max-width:600px; margin:auto; background:white; border-radius:20px; padding:44px; box-shadow:0 4px 32px rgba(140,0,0,0.10); border:1px solid var(--border); }
+.inquiry-wrapper h2 { font-family:'Barlow Condensed',sans-serif; font-size:32px; font-weight:800; color:var(--dark); margin-bottom:6px; text-transform:uppercase; }
+.inquiry-wrapper > p { color:var(--gray); font-size:15px; margin-bottom:28px; font-weight:500; }
+.form-group { margin-bottom:18px; }
+.form-group label { display:block; font-size:14px; font-weight:700; color:var(--dark); margin-bottom:7px; }
+.form-group input, .form-group select { width:100%; padding:12px 16px; border:1.5px solid var(--border); border-radius:8px; font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:500; color:var(--dark); background:var(--off-white); transition:border 0.2s; outline:none; }
+.form-group input:focus, .form-group select:focus { border-color:var(--red); background:white; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.btn-submit { width:100%; background:var(--red-dark); color:white; border:none; padding:15px; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px; cursor:pointer; transition:all 0.2s; text-transform:uppercase; margin-top:8px; }
+.btn-submit:hover { background:var(--red); }
+.btn-submit:disabled { opacity:0.6; cursor:not-allowed; }
+.success-msg { display:none; background:#e8f5e9; border:1.5px solid #4CAF50; border-radius:10px; padding:18px; text-align:center; color:#2e7d32; font-size:16px; font-weight:600; margin-top:16px; }
+
+footer { background:var(--dark); color:white; padding:40px 24px 20px; }
+.footer-inner { max-width:1200px; margin:auto; }
+.footer-top { display:flex; gap:48px; flex-wrap:wrap; margin-bottom:32px; }
+.footer-brand { flex:2; min-width:220px; }
+.footer-brand p { font-size:14px; color:rgba(255,255,255,0.55); line-height:1.7; font-weight:500; max-width:320px; margin-top:10px; }
+.footer-links { flex:1; min-width:160px; }
+.footer-links h4 { font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:14px; color:var(--red-light); }
+.footer-links ul { list-style:none; }
+.footer-links ul li { margin-bottom:8px; }
+.footer-links ul li a { color:rgba(255,255,255,0.6); text-decoration:none; font-size:14px; font-weight:500; transition:color 0.2s; }
+.footer-links ul li a:hover { color:white; }
+.footer-bottom { border-top:1px solid rgba(255,255,255,0.1); padding-top:20px; text-align:center; font-size:13px; color:rgba(255,255,255,0.4); }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(4px); }
+.modal-overlay.active { display:flex; }
+.modal { background:white; border-radius:20px; padding:40px; width:100%; max-width:520px; max-height:90vh; overflow-y:auto; position:relative; animation:modalIn 0.3s ease; }
+@keyframes modalIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+.modal-close { position:absolute; top:16px; right:16px; background:var(--cream); border:none; width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:18px; color:var(--gray); display:flex; align-items:center; justify-content:center; }
+.modal-close:hover { background:var(--red); color:white; }
+.modal h2 { font-family:'Barlow Condensed',sans-serif; font-size:30px; font-weight:800; color:var(--dark); margin-bottom:4px; text-transform:uppercase; padding-right:40px; }
+.modal-model-pre { color:var(--red); font-weight:700; font-size:15px; margin-bottom:20px; display:none; }
+
+.fade-up { opacity:0; transform:translateY(28px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity:1; transform:none; }
+
+@media(max-width:768px) {
+  .nav-links { display:none; position:absolute; top:68px; left:0; right:0; background:var(--red-dark); flex-direction:column; padding:16px; gap:4px; }
+  .nav-links.open { display:flex; }
+  .hamburger { display:flex; }
+  .about-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+  .hero-inner { flex-direction:column; }
+  .tractor-graphic { display:none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="#home">
+      <div class="logo-circle">A</div>
+      <div>
+        <span class="logo-title">AGRISTAR FARM SERVICE</span>
+        <span class="logo-sub">MASSEY FERGUSON DEALER</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" onclick="closeNav()">🏠 Home</a></li>
+      <li><a href="#tractors" onclick="closeNav()">🚜 Tractors</a></li>
+      <li><a href="#about" onclick="closeNav()">ℹ️ About Us</a></li>
+      <li><a href="#inquiry" class="nav-btn" onclick="closeNav()">📋 Inquiry</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleNav()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<section id="home">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">🌾 Authorized Massey Ferguson Dealer</div>
+      <h1 class="hero-title">
+        <span>Apna Khet,</span>
+        Apna Tractor
+      </h1>
+      <p class="hero-desc">Agristar Farm Service mein aapka swagat hai. Hamāre paas Massey Ferguson ke latest models best price aur best service ke saath available hain.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openInquiry(null)">📋 Inquiry Karo Abhi</button>
+        <button class="btn-outline" onclick="document.getElementById('tractors').scrollIntoView({behavior:'smooth'})">🚜 Tractors Dekho</button>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">5+</div><div class="stat-label">Tractor Models</div></div>
+        <div><div class="stat-num">100%</div><div class="stat-label">Genuine Parts</div></div>
+        <div><div class="stat-num">24/7</div><div class="stat-label">Support</div></div>
+      </div>
+    </div>
+    <div class="tractor-graphic">🚜</div>
+  </div>
+</section>
+
+<section id="tractors">
+  <div class="section-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">🚜 Our Fleet</div>
+      <h2 class="section-title">Hamare Tractor Models</h2>
+      <p class="section-sub">Sabse latest Massey Ferguson tractors — best price mein available</p>
+    </div>
+    <div class="tractors-grid" id="tractorsGrid">
+      <div class="no-tractors">⏳ Loading tractors...</div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-left fade-up">
+        <div class="about-tag">About Us</div>
+        <h2 class="about-title">Agristar Farm Service Ke Baare Mein</h2>
+        <p class="about-desc">Hum ek trusted Massey Ferguson authorized dealership hain. Hamara uddeshya hai ki har kisan ko uske khet ke liye best tractor mile — sahi price pe, sahi service ke saath.</p>
+        <ul class="about-points">
+          <li>Authorized Massey Ferguson Dealership</li>
+          <li>Genuine Spare Parts & After-Sales Service</li>
+          <li>EMI & Finance Options Available</li>
+          <li>Experienced & Trusted Team</li>
+          <li>Doorstep Service Support</li>
+        </ul>
+      </div>
+      <div class="about-right fade-up">
+        <h3>Hamari Khasiyat</h3>
+        <div class="about-feature">
+          <div class="feature-icon">🏆</div>
+          <div class="feature-text"><h4>Authorized Dealer</h4><p>100% genuine Massey Ferguson products</p></div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">🔧</div>
+          <div class="feature-text"><h4>Expert Service</h4><p>Trained mechanics & fast turnaround</p></div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">💰</div>
+          <div class="feature-text"><h4>Best Price Guarantee</h4><p>Market mein sabse competitive pricing</p></div>
+        </div>
+        <div class="about-feature">
+          <div class="feature-icon">📞</div>
+          <div class="feature-text"><h4>24/7 Customer Support</h4><p>Hamesha haazir — kisi bhi sawaal ke liye</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="inquiry">
+  <div class="section-inner">
+    <div class="section-header fade-up">
+      <div class="section-tag">📋 Contact</div>
+      <h2 class="section-title">Inquiry Karo</h2>
+      <p class="section-sub">Apni details bharo — hamari team aapko jald contact karegi</p>
+    </div>
+    <div class="inquiry-wrapper fade-up">
+      <h2>Abhi Inquiry Karo</h2>
+      <p>Apna naam, number aur location bharo — hum jald aapse contact karenge!</p>
+      <form onsubmit="submitInquiry(event,'main')">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Aapka Naam *</label>
+            <input type="text" id="main_naam" placeholder="Jaise: Ramesh Patel" required />
+          </div>
+          <div class="form-group">
+            <label>Mobile Number *</label>
+            <input type="tel" id="main_number" placeholder="10-digit number" maxlength="10" required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Taluka *</label>
+            <select id="main_taluka" required onchange="loadVillages('main')">
+              <option value="">-- Taluka Select Karo --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Village *</label>
+            <select id="main_village" required>
+              <option value="">-- Pehle Taluka Chuno --</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Tractor Model *</label>
+          <select id="main_model" required>
+            <option value="">-- Model Select Karo --</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit" id="main_btn">🚀 Inquiry Submit Karo</button>
+        <div class="success-msg" id="main_success">✅ Shukriya! Aapki inquiry mil gayi. Hum jald aapse contact karenge!</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;color:white;letter-spacing:1px;">AGRISTAR FARM SERVICE</span>
+        <p>Authorized Massey Ferguson Tractor Dealership. Aapke khet ke liye, aapka bharosemand partner.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#tractors">Tractors</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#inquiry">Inquiry</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Tractors</h4>
+        <ul id="footerModels"><li><a href="#tractors">Loading...</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2024 Agristar Farm Service. All rights reserved. | Massey Ferguson Authorized Dealer</div>
+  </div>
+</footer>
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inquiryModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Inquiry Karo</h2>
+    <div class="modal-model-pre" id="modalModelPre"></div>
+    <form onsubmit="submitInquiry(event,'modal')">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Aapka Naam *</label>
+          <input type="text" id="modal_naam" placeholder="Jaise: Ramesh Patel" required />
+        </div>
+        <div class="form-group">
+          <label>Mobile Number *</label>
+          <input type="tel" id="modal_number" placeholder="10-digit number" maxlength="10" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Taluka *</label>
+          <select id="modal_taluka" required onchange="loadVillages('modal')">
+            <option value="">-- Taluka Select Karo --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Village *</label>
+          <select id="modal_village" required>
+            <option value="">-- Pehle Taluka Chuno --</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Tractor Model *</label>
+        <select id="modal_model" required>
+          <option value="">-- Model Select Karo --</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit" id="modal_btn">🚀 Inquiry Submit Karo</button>
+      <div class="success-msg" id="modal_success">✅ Shukriya! Aapki inquiry mil gayi. Hum jald aapse contact karenge!</div>
+    </form>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://yoqojrufwigyrflnzncd.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Wm3dGa1Yg1TnlevZjxKmSw_0Dy4vmtf';
+
+async function sb(path, opts={}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || ''
+    },
+    method: opts.method || 'GET',
+    body: opts.body ? JSON.stringify(opts.body) : undefined
+  });
+  if (res.status === 201 || res.headers.get('content-length')==='0') return true;
+  if (!res.ok) return null;
+  return res.json();
+}
+
+let tractors = [], talukas = [];
+
+async function loadTractors() {
+  const data = await sb('tractors?select=*&order=created_at.desc');
+  tractors = data || [];
+  renderTractors();
+  populateModels();
+}
+
+function renderTractors() {
+  const grid = document.getElementById('tractorsGrid');
+  if (!tractors.length) {
+    grid.innerHTML = '<div class="no-tractors">🚜 Abhi koi tractor available nahi hai. Jald aayenge!</div>';
+    return;
+  }
+  grid.innerHTML = tractors.map(t => `
+    <div class="tractor-card fade-up">
+      <div class="card-img-wrap">
+        ${t.image_url ? `<img src="${t.image_url}" alt="${t.model_name}" onerror="this.outerHTML='<div class=\\'card-img-placeholder\\'>🚜</div>'"/>` : '<div class="card-img-placeholder">🚜</div>'}
+        <span class="card-badge">In Stock</span>
+      </div>
+      <div class="card-body">
+        <div class="card-model">${t.model_name}</div>
+        <div class="card-hp">Power: <span>${t.hp} HP</span></div>
+        <div class="card-price">₹${t.price} <small>Lakh</small></div>
+        <button class="btn-inquire" onclick="openInquiry('${t.model_name}')">📋 Inquiry Now</button>
+      </div>
+    </div>
+  `).join('');
+  // Footer models
+  document.getElementById('footerModels').innerHTML = tractors.map(t => `<li><a href="#tractors">${t.model_name}</a></li>`).join('');
+  observeFadeUps();
+}
+
+function populateModels() {
+  const opts = '<option value="">-- Model Select Karo --</option>' + tractors.map(t => `<option value="${t.model_name}">${t.model_name}</option>`).join('');
+  ['main_model','modal_model'].forEach(id => document.getElementById(id).innerHTML = opts);
+}
+
+async function loadTalukas() {
+  const data = await sb('talukas?select=*,villages(*)&order=name.asc');
+  talukas = data || [];
+  const opts = '<option value="">-- Taluka Select Karo --</option>' + talukas.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+  ['main_taluka','modal_taluka'].forEach(id => document.getElementById(id).innerHTML = opts);
+}
+
+function loadVillages(prefix) {
+  const tid = document.getElementById(`${prefix}_taluka`).value;
+  const el = document.getElementById(`${prefix}_village`);
+  const t = talukas.find(x => x.id == tid);
+  const vs = t?.villages || [];
+  el.innerHTML = vs.length
+    ? '<option value="">-- Village Select Karo --</option>' + vs.map(v=>`<option value="${v.name}">${v.name}</option>`).join('')
+    : '<option value="">-- Koi village nahi --</option>';
+}
+
+function openInquiry(model) {
+  document.getElementById('modal_naam').value = '';
+  document.getElementById('modal_number').value = '';
+  document.getElementById('modal_taluka').value = '';
+  document.getElementById('modal_village').innerHTML = '<option value="">-- Pehle Taluka Chuno --</option>';
+  document.getElementById('modal_success').style.display = 'none';
+  populateModels();
+  const pre = document.getElementById('modalModelPre');
+  if (model) { pre.textContent = `Selected Model: ${model}`; pre.style.display = 'block'; document.getElementById('modal_model').value = model; }
+  else pre.style.display = 'none';
+  document.getElementById('inquiryModal').classList.add('active');
+}
+
+function closeModal() { document.getElementById('inquiryModal').classList.remove('active'); }
+document.getElementById('inquiryModal').addEventListener('click', e => { if(e.target.id==='inquiryModal') closeModal(); });
+
+async function submitInquiry(e, prefix) {
+  e.preventDefault();
+  const naam = document.getElementById(`${prefix}_naam`).value.trim();
+  const number = document.getElementById(`${prefix}_number`).value.trim();
+  const talukaId = document.getElementById(`${prefix}_taluka`).value;
+  const village = document.getElementById(`${prefix}_village`).value;
+  const model = document.getElementById(`${prefix}_model`).value;
+  if (number.length !== 10) { alert('Sahi 10-digit mobile number bharo!'); return; }
+  const taluka = talukas.find(t => t.id == talukaId);
+  const btn = document.getElementById(`${prefix}_btn`);
+  btn.disabled = true; btn.textContent = 'Submit ho raha hai...';
+  const ok = await sb('inquiries', { method:'POST', prefer:'return=minimal', body:{ naam, mobile:number, taluka:taluka?.name||'', village, model_name:model } });
+  btn.disabled = false; btn.textContent = '🚀 Inquiry Submit Karo';
+  if (ok) {
+    document.getElementById(`${prefix}_success`).style.display = 'block';
+    e.target.reset();
+    if (prefix==='modal') setTimeout(closeModal, 2500);
+  } else alert('Error aaya! Thodi der baad try karo.');
+}
+
+function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+function closeNav() { document.getElementById('navLinks').classList.remove('open'); }
+
+function observeFadeUps() {
+  const obs = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);} }), {threshold:0.1});
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => obs.observe(el));
+}
+
+loadTractors();
+loadTalukas();
+observeFadeUps();
+</script>
+</body>
+</html>
